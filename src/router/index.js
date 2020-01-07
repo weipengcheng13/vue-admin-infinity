@@ -54,6 +54,7 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
+
   {
     path: '/customer',
     component: Layout,
@@ -61,11 +62,12 @@ export const constantRoutes = [
       {
         path: 'list',
         name: 'CustomerList',
-        component: () => import('@/pages/customer/List'), //@代表src
+        component: () => import('@/pages/customer/List'),
         meta: { title: '顾客管理', icon: 'user' }
       }
     ]
   },
+
   {
     path: '/employee',
     component: Layout,
@@ -73,11 +75,78 @@ export const constantRoutes = [
       {
         path: 'list',
         name: 'EmployeeList',
-        component: () => import('@/pages/employee/List'), //@代表src
+        component: () => import('@/pages/employee/List'),
         meta: { title: '员工管理', icon: 'tree' }
       }
     ]
   },
+
+  {
+    path: '/category',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: 'ColumnList',
+        component: () => import('@/pages/category/List'),
+        meta: { title: '栏目管理', icon: 'table' }
+      }
+    ]
+  },
+
+  {
+    path: '/order',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: 'OrderList',
+        component: () => import('@/pages/order/List'),
+        meta: { title: '订单管理', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/product',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: 'ProductList',
+        component: () => import('@/pages/product/List'),
+        meta: { title: '产品管理', icon: 'example' }
+      }
+    ]
+  },
+
+  {
+    path: '/comment',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: 'CommentList',
+        component: () => import('@/pages/comment/List'),
+        meta: { title: '评论管理', icon: 'example' }
+      }
+    ]
+  },
+
+  {
+    path: '/address',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: 'AddressList',
+        component: () => import('@/pages/address/List'),
+        meta: { title: '地址管理', icon: 'example' }
+      }
+    ]
+  },
+
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

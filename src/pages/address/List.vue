@@ -1,16 +1,18 @@
 <template>
     <div>
         <!--按钮-->
-        <el-button type="success" @click="toAddHandler">添加</el-button>
+        <el-button type="primary" @click="toAddHandler">添加地址</el-button>
         <el-button type="danger">批量删除</el-button>
 
         <!--表格-->
         
-        <el-table :data="customers">
+        <el-table :data="addresss">
             <el-table-column prop="id" label="编号"></el-table-column>
-            <el-table-column prop="realname" label="姓名"></el-table-column>
-            <el-table-column prop="gender" label="性别"></el-table-column>
-            <el-table-column prop="telephone" label="联系方式"></el-table-column>
+            <el-table-column prop="province" label="所属省份"></el-table-column>
+            <el-table-column prop="city" label="城市"></el-table-column>
+            <el-table-column prop="area" label="所属区域"></el-table-column>
+            <el-table-column prop="address" label="所属街道"></el-table-column>
+            <el-table-column prop="telephone" label="电话"></el-table-column>
             <el-table-column  label="操作">
                 <template v-slot="slot">
                     <a class="el-icon-delete" href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
@@ -35,19 +37,19 @@
             width="60%">
             --{{form}}
             <el-form :model="form" label-width="80px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.username"></el-input>
+                <el-form-item label="省份">
+                    <el-input v-model="form.province"></el-input>
                 </el-form-item>
-                <el-form-item label="密码">
-                    <el-input type="password" v-model="form.password"></el-input>
+                <el-form-item label="城市">
+                    <el-input v-model="form.city"></el-input>
                 </el-form-item>
-                <el-form-item label="真实姓名">
-                    <el-input v-model="form.realname"></el-input>
+                <el-form-item label="区域">
+                    <el-input v-model="form.area"></el-input>
                 </el-form-item>
-                <el-form-item label="性别">
-                    <el-input v-model="form.gender"></el-input>
+                <el-form-item label="街道">
+                    <el-input v-model="form.address"></el-input>
                 </el-form-item>
-                <el-form-item label="手机号">
+                <el-form-item label="电话">
                     <el-input v-model="form.telephone"></el-input>
                 </el-form-item>
             </el-form>
@@ -66,16 +68,16 @@ export default {
     //用于存放网页中需要调用的方法
     methods:{
         loadData(){
-             let url="http://localhost:6677/customer/findAll"
+             let url="http://localhost:6677/address/findAll"
              request.get(url).then((response)=>{
             //将匿名函数改为箭头函数指向外部函数的this
             //将查询结果设置到customers中
-            this.customers = response.data;
+            this.addresss = response.data;
         })
         },
         submitHandler(){
             //通过request与后台逻辑进行交互，并且携带参数
-            let url="http://localhost:6677/customer/saveOrUpdate"
+            let url="http://localhost:6677/address/saveOrUpdate"
             request({
                 url,
                 method:"POST",
@@ -101,7 +103,7 @@ export default {
           type: 'warning'
         }).then(() => {
           //调用后台接口完成删除操作
-          let url="http://localhost:6677/customer/deleteById?id="+id;
+          let url="http://localhost:6677/address/deleteById?id="+id;
           request.get(url).then((response)=>{
               //刷新数据
                 this.loadData();
@@ -117,7 +119,7 @@ export default {
         toUpdateHandler(row){
             //模态框的表单中显示出当前行的信息
             this.form=row;
-            this.title="修改顾客信息"
+            this.title="修改地址信息"
             this.visible=true;
         },
         closeModalHandler(){
@@ -126,8 +128,6 @@ export default {
         toAddHandler(){
             this.visible=true;
             this.form={
-                type:"customer"
-
             }
         }
     },
@@ -135,11 +135,10 @@ export default {
     data(){
         return{
             form:{
-                type:"customer"
             },
             visible:false,
-            title:"录入顾客信息",
-            customers:[]
+            title:"录入地址信息",
+            addresss:[]
         }
     },
     //生命周期,VUE实例完毕后要执行的操作
@@ -150,5 +149,3 @@ export default {
 </script>
 
 <style scoped>
-
-</style>

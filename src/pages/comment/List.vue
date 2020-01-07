@@ -1,19 +1,14 @@
 <template>
   <div>
-    <!-- 按钮 -->
-    <div>
-    <el-button type="primary" size="small"  @click="toAddHandler">添加</el-button>
+<!-- 添加按钮 -->
+    <el-button type="success" size="small" @click="toAddHandler">添加</el-button>
     <el-button type="danger" size="small">批量删除</el-button>
-    </div>
 
-    <!-- 表格 -->
-    <el-table :data="employees">
+<!-- 添加表格 -->
+    <el-table :data="comments">
       <el-table-column prop="id" label="编号" fixed="left"></el-table-column>
-      <el-table-column prop="realname" label="姓名" fixed="left"></el-table-column>
-      <el-table-column prop="gender" label="性别"></el-table-column>
-      <el-table-column prop="telephone" label="联系方式" width="120"></el-table-column>
-      <el-table-column prop="idCard" label="身份证号" width="200"></el-table-column>
-      <el-table-column prop="bankCard" label="银行卡号" width="200"></el-table-column>
+      <el-table-column prop="content" label="内容" ></el-table-column>
+      <el-table-column prop="commentTime" label="评论时间" width="200"></el-table-column>
       <el-table-column label="操作" fixed="right">
         <template v-slot="slot">
           <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
@@ -22,35 +17,17 @@
       </el-table-column>
     </el-table>
 
-    <!-- 分页 -->
+<!-- 添加分页 -->
     <el-pagination layout="prev, pager, next" :total="50"></el-pagination>
 
-    <!-- 模态框 -->
+<!-- 模态框 -->
     <el-dialog :title="title" :visible.sync="visible" width="60%" >
-       <el-form :model="form" label-width="80px">
-        <el-form-item label="真实姓名">
-          <el-input v-model="form.realname"></el-input>
+      <el-form :model="form" label-width="80px">
+        <el-form-item label="内容">
+          <el-input v-model="form.content"></el-input>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="form.gender">
-            <el-radio label="男">男</el-radio>
-            <el-radio label="女">女</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="用户名">
-          <el-input v-model="form.username"></el-input>
-        </el-form-item>
-        <el-form-item label="密码">
-          <el-input type="password" v-model="form.password"></el-input>
-        </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model="form.telephone"></el-input>
-        </el-form-item>
-        <el-form-item label="身份证号">
-          <el-input v-model="form.idCard"></el-input>
-        </el-form-item> 
-        <el-form-item label="银行卡号">
-          <el-input v-model="form.bankCard"></el-input>
+        <el-form-item label="评论时间">
+          <el-input v-model="form.commentTime"></el-input>
         </el-form-item>
       </el-form>
 
@@ -63,33 +40,38 @@
 </template>
 
 <script>
-import request from '@/utils/request' 
+import request from '@/utils/request' // @ = src目录
 import querystring from 'querystring'
 export default {
   //用于存放要向网页中存放的数据
   data(){
     return{
       form:{
-        type:"waiter"
+        type:"comment"
       },
-      title:"录入员工信息",
+      title:"添加评论",
       visible:false,
-      employees:[]
+      comments:[]
     }
   },
+  //生命周期,vue实例创建完毕
   created(){
     this.loadData();
   },
   //方法,存放网页中需要调用的方法
   methods:{
     loadData(){
-      let url = "http://localhost:6677/waiter/findAll"
-      request.get(url).then((response)=>{
-        this.employees = response.data;
-      })
+      let url = "http://localhost:6677/comment/findAll"
+      request.get(url).then((response)=>{ 
+      //将匿名函数改为箭头函数  function（response）{}
+      //将查询结果设置到customer
+      this.comments = response.data;
+    })
     },
     submitHandler(){
-       let url = "http://localhost:6677/waiter/saveOrUpdate"
+      //this.form(对象) ---字符串--> 后台 {type:'customer',age:12}
+      //通过request与后台进行交互，并且携带参数
+      let url = "http://localhost:6677/comment/saveOrUpdate"
       request({
         url,
         method:"POST",
@@ -98,6 +80,7 @@ export default {
         },
         data:querystring.stringify(this.form)
       }).then((response)=>{
+        //模态框关闭
         this.closeModalHandler();
         this.$message({
           type:"success",
@@ -113,7 +96,7 @@ export default {
           type: 'warning'
         }).then(() => {
           //调用后台接口，完成删除操作
-        let url = "http://localhost:6677/waiter/deleteById?id="+id;
+        let url = "http://localhost:6677/comment/deleteById?id="+id;
         request.get(url).then((response)=>{
           //刷新数据，提示结果
         this.loadData();
@@ -125,7 +108,7 @@ export default {
         })
     },
     toUpdateHandler(row){
-      this.title = "修改顾客信息";
+      this.title = "修改评论";
       this.visible = true;
       this.form = row;
     },
@@ -133,15 +116,16 @@ export default {
       this.visible=false;
     },
     toAddHandler(){
-      this.title="录入员工信息";
-      this.visible=true;
-      this.form={
-                type:"waiter"
-            }
+      this.title = "添加评论";
+      this.visible = true;
+      this.form = {
+        type:"comment"
+      }
     }
   }
 }
 </script>
+
 
 <style scoped>
 
